@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "predev": "npm install",
-    "dev": "nodemon --require dotenv/config ./back_end/server.js"
+    "dev": "nodemon --require dotenv/config server.js"
   },
   "repository": {
     "type": "git",

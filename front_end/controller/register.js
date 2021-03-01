@@ -1,25 +1,26 @@
 "use strict"
 
-// async function register(event) {
-//     event.preventDefault()
+async function register(event) {
+    event.preventDefault()
 
-//     const user = "zebu"
-//     const password = "zebu1234"
+    const user = event.target.user.value
+    const name = event.target.name.value
+    const password = event.target.password.value
 
-//     const url = "http://localhost:3000/api/";
-//     const params = {
-//         method: "post",
-//         headers: {
-//             "content-type": "application/json"
-//         },
-//         body: JSON.stringify({ user, password })
-//     };
+    const url = "http://localhost:3000/api/user";
+    const params = {
+        method: "post",
+        headers: {
+            "content-type": "application/json"
+        },
+        body: JSON.stringify({ user, name, password })
+    };
 
-//     const response = await fetch(url, params)
-//     const { token } = await response.json()
+    const response = await fetch(url, params)
+    const jsonResponse = await response.json()
 
-//     console.log(token)
-// }
+    console.log(jsonResponse)
+}
 
 async function getRegisterView() {
     const strRegisterView = await (await fetch("/front_end/view/register.html")).text()
@@ -33,7 +34,7 @@ async function getRegisterView() {
 
 function addPageEvents(page) {
     const form = page.querySelector("#registerForm")
-    //form.onsubmit = register
+    form.onsubmit = register
 }
 
 export const registerView = {
