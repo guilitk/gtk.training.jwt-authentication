@@ -1,5 +1,7 @@
 "use strict"
 
+import { homeView } from "./home.js"
+
 async function register(event) {
     event.preventDefault()
 
@@ -7,7 +9,7 @@ async function register(event) {
     const name = event.target.name.value
     const password = event.target.password.value
 
-    const url = "http://localhost:3000/api/user";
+    const url = "http://localhost:3000/api/register";
     const params = {
         method: "post",
         headers: {
@@ -16,10 +18,16 @@ async function register(event) {
         body: JSON.stringify({ user, name, password })
     };
 
-    const response = await fetch(url, params)
-    const jsonResponse = await response.json()
+    try {
+        const response = await fetch(url, params)
 
-    console.log(jsonResponse)
+        if (response.status === 201) {
+            await processSuccessfulRegister()
+        }
+    } catch (error) {
+        console.log(error)
+    }
+
 }
 
 async function getRegisterView() {
@@ -35,6 +43,13 @@ async function getRegisterView() {
 function addPageEvents(page) {
     const form = page.querySelector("#registerForm")
     form.onsubmit = register
+}
+
+async function processSuccessfulRegister() {
+    document.querySelector("#registerForm").hidden = true
+    document.querySelector("#txtSuccessRegister").hidden = false
+
+    setTimeout(async () => await homeView.loadLoginView(), 1000)
 }
 
 export const registerView = {

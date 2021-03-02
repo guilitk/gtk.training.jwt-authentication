@@ -1,12 +1,14 @@
 "use strict"
 
+import { app } from "./index.js"
+
 async function login(event) {
     event.preventDefault()
 
-    const user = "zebu"
-    const password = "zebu1234"
+    const user = event.target.user.value
+    const password = event.target.password.value
 
-    const url = "http://localhost:3000/api/";
+    const url = "http://localhost:3000/api/login";
     const params = {
         method: "post",
         headers: {
@@ -16,9 +18,13 @@ async function login(event) {
     };
 
     const response = await fetch(url, params)
-    const { token } = await response.json()
 
-    console.log(token)
+    if (response.status === 200) {
+        const { token } = await response.json()
+        app.loadHomeView(user, token)
+    } else {
+        console.log(await response.json())
+    }
 }
 
 async function getLoginView() {

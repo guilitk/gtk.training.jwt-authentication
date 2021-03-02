@@ -41,12 +41,32 @@ apiRouter.get('/',
 //         }
 //     });
 
-apiRouter.post("/user",
+apiRouter.post("/register",
     async ({ body, res, next }) => {
         try {
-            const result = await userRepository.createUser(body);
-            console.log(result)
-            res.status(201).json(result);
+            await userRepository.createUser(body)
+            res.status(201).json("User was created.")
+        } catch (error) {
+            next(error);
+        }
+    });
+
+apiRouter.post("/login",
+    async ({ body, res, next }) => {
+        try {
+            const isAuthenticated = await userRepository.authenticateUser(body)
+            if (isAuthenticated) {
+                const tokenPayload = {
+                    user: body.user
+                }
+                const token = jwt.sign(tokenPayload, process.env.SECRET, {
+                    expiresIn: 300 // expires in 5min
+                });
+                await userRepository.saveUserToken(body.user, token)
+                res.status(200).json({ auth: true, token: token })
+            } else {
+                res.status(401).json("User was not authenticated.")
+            }
         } catch (error) {
             next(error);
         }

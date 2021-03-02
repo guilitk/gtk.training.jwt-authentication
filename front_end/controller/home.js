@@ -34,5 +34,6 @@ async function loadRegisterView() {
 }
 
 export const homeView = {
-    getHomeView: getHomeView
+    getHomeView: getHomeView,
+    loadLoginView: loadLoginView
 }

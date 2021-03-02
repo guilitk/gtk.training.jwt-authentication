@@ -8,6 +8,7 @@
 
 const mysql = require("mysql");
 const User = require("../model/user.js");
+const { hashUtils } = require("../utils/hashUtils.js")
 
 function getConnection() {
     const CONNECTION_SETTINGS = Object.freeze({
@@ -40,15 +41,40 @@ async function getAllUsers() {
 }
 
 async function createUser(data) {
+    data.password = await hashUtils.hashPassword(data.password)
     const user = new User(data);
     console.log(user)
     const query = "INSERT INTO user SET ?";
-    const result = await executeQuery(query, user);
+    await executeQuery(query, user);
+}
 
-    return JSON.parse(result);
+async function authenticateUser(data) {
+    const userHash = await getUserHash(data.user)
+
+    return await hashUtils.validatePassword(data.password, userHash)
+}
+
+async function saveUserToken(user, token) {
+
+    const query = "UPDATE user SET ? WHERE user = ?";
+    await executeQuery(query, [{ auth_token: token }, user]);
+}
+
+async function getUserHash(username) {
+    const query = "SELECT password FROM user WHERE user = ?";
+    let result = await executeQuery(query, username);
+    result = JSON.parse(result);
+
+    if (result.length === 0) {
+        throw { status: 404 };
+    }
+
+    return result[0].password;
 }
 
 exports.userRepository = {
     getAllUsers: getAllUsers,
     createUser: createUser,
+    authenticateUser: authenticateUser,
+    saveUserToken: saveUserToken
 };
