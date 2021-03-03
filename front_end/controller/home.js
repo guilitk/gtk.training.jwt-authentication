@@ -2,6 +2,7 @@
 
 import { loginView } from "./login.js"
 import { registerView } from "./register.js"
+import { usersListView } from "./usersList.js"
 
 async function getHomeView() {
     const strHomeView = await (await fetch("/front_end/view/home.html")).text()
@@ -16,9 +17,11 @@ async function getHomeView() {
 function addPageEvents(page) {
     const btnLogin = page.querySelector("#btnLogin")
     const btnRegister = page.querySelector("#btnRegister")
+    const btnListUsers = page.querySelector("#btnListUsers")
 
     btnLogin.onclick = loadLoginView
     btnRegister.onclick = loadRegisterView
+    btnListUsers.onclick = loadUsersListView
 }
 
 async function loadLoginView() {
@@ -31,6 +34,12 @@ async function loadRegisterView() {
     const registerViewHTML = await registerView.getRegisterView()
     document.getElementById("app").innerHTML = ""
     document.getElementById("app").appendChild(registerViewHTML)
+}
+
+async function loadUsersListView() {
+    const usersListViewHTML = await usersListView.getUsersListView()
+    //document.getElementById("app").innerHTML = ""
+    // document.getElementById("app").appendChild(usersListViewHTML)
 }
 
 export const homeView = {

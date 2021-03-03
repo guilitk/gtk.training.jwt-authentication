@@ -8,8 +8,9 @@
 
 const cors = require("cors");
 const corsOptions = {
-    "origin": "*",
-    "allowedHeaders": "Content-Type",
+    "origin": "http://localhost:5500",
+    "credentials": true,
+    "allowedHeaders": "Content-Type,x-access-token",
     "methods": "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS"
 };
 

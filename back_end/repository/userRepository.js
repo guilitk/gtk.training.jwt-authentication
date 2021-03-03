@@ -34,7 +34,7 @@ function executeQuery(query, values) {
 }
 
 async function getAllUsers() {
-    const query = "SELECT * FROM user";
+    const query = "SELECT user, name FROM user";
     const result = await executeQuery(query);
 
     return JSON.parse(result);
@@ -43,7 +43,6 @@ async function getAllUsers() {
 async function createUser(data) {
     data.password = await hashUtils.hashPassword(data.password)
     const user = new User(data);
-    console.log(user)
     const query = "INSERT INTO user SET ?";
     await executeQuery(query, user);
 }
@@ -72,9 +71,16 @@ async function getUserHash(username) {
     return result[0].password;
 }
 
+async function getRefreshToken(user) {
+    const query = "SELECT auth_token FROM user WHERE user = ?";
+    let result = await executeQuery(query, user);
+    return JSON.parse(result)[0].auth_token;
+}
+
 exports.userRepository = {
     getAllUsers: getAllUsers,
     createUser: createUser,
     authenticateUser: authenticateUser,
-    saveUserToken: saveUserToken
+    saveUserToken: saveUserToken,
+    getRefreshToken: getRefreshToken
 };

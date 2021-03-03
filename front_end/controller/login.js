@@ -11,6 +11,7 @@ async function login(event) {
     const url = "http://localhost:3000/api/login";
     const params = {
         method: "post",
+        credentials: "include",
         headers: {
             "content-type": "application/json"
         },

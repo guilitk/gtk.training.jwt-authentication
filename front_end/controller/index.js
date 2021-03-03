@@ -8,6 +8,10 @@ const inMemoryVariables = {
 }
 
 async function loadHomeView(user, token) {
+
+
+
+
     inMemoryVariables.token = (token) ? token : ""
     inMemoryVariables.user = (user) ? user : "visitante"
 
@@ -24,6 +28,7 @@ async function loadHomeView(user, token) {
     document.getElementById("app").innerHTML = ""
     document.getElementById("app").appendChild(homeViewHTML)
 }
+
 
 loadHomeView()
 
